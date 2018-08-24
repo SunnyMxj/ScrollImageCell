@@ -24,7 +24,7 @@ static NSString *contentOffSetKeyPath = @"contentOffset";
     if (!image || width <= 0 || height <= 0) {
         return;
     }
-    if (self.originView) {
+    if (self.scrollImageView) {
         return;
     }
     self.originView = view;
@@ -64,12 +64,14 @@ static NSString *contentOffSetKeyPath = @"contentOffset";
 #pragma mark -- calculateFrame
 - (void)didScrolledTableView:(UITableView *)tableView {
     CGFloat contentOffSetY = tableView.contentOffset.y;
-    UIEdgeInsets inset = UIEdgeInsetsZero;
+    UIEdgeInsets inset;
     if (@available(ios 11.0, *)) {
         inset = UIEdgeInsetsMake(tableView.adjustedContentInset.top - tableView.contentInset.top,
                                  tableView.adjustedContentInset.left - tableView.contentInset.left,
                                  tableView.adjustedContentInset.bottom - tableView.contentInset.bottom,
                                  tableView.adjustedContentInset.right - tableView.contentInset.right);
+    } else {
+        inset = self.adjustedInset;
     }
     CGRect imageViewRect = [self.originView.superview convertRect:self.originView.frame toView:tableView];
     
@@ -118,6 +120,18 @@ static NSString *contentOffSetKeyPath = @"contentOffset";
 
 - (void)setOriginView:(UIView *)originView {
     objc_setAssociatedObject(self, @selector(originView), originView, OBJC_ASSOCIATION_ASSIGN);
+}
+
+- (UIEdgeInsets)adjustedInset {
+    NSString *inset = (NSString *)objc_getAssociatedObject(self, _cmd);
+    if ([inset isKindOfClass:[NSString class]] && inset.length) {
+        return UIEdgeInsetsFromString(inset);
+    }
+    return UIEdgeInsetsZero;
+}
+
+- (void)setAdjustedInset:(UIEdgeInsets)adjustedInset {
+    objc_setAssociatedObject(self, @selector(adjustedInset), NSStringFromUIEdgeInsets(adjustedInset), OBJC_ASSOCIATION_RETAIN);
 }
 
 #pragma mark -- hepler

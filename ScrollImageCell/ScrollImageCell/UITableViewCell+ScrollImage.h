@@ -10,6 +10,8 @@
 
 @interface UITableViewCell (ScrollImage)
 
+@property(nonatomic,assign) UIEdgeInsets adjustedInset API_DEPRECATED("Only use before iOS11 in some special cases", ios(7.0,11.0));
+
 /**
  设置滑动图片信息
 

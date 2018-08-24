@@ -38,6 +38,11 @@
 #warning TODO HowToUse #1
         //TODO here
         [self setScrollImageView:_demoView image:item.imageURL?:item.image imageWidth:item.imageWidth imageHeight:item.imageHeight];
+        /*
+         if (系统版本小于iOS11 && 有navigation或者tabbar的情况下，tableview的inset需要微调) {
+            self.adjustedInset = ...
+         }
+         */
     }
 }
 
